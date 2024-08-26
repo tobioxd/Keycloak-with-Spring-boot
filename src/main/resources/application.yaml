@@ -1,0 +1,26 @@
+server:
+    port: 8081
+
+api:
+    prefix: /api/v1
+
+# Security Configuration
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8080/realms/tobioxd
+                    jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+# JWT Configuration
+jwt:
+    auth:
+        converter:
+            resource-id: tobioxd-rest-api
+            principal-attribute: principal_username
+
+# Logging Configuration
+logging:
+    level:
+        org.springframework.security: DEBUG

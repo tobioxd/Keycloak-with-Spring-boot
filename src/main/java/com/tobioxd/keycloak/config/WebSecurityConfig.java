@@ -28,7 +28,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((request) ->
                 request
-                    .requestMatchers(String.format("%s/hello", apiPrefix)).permitAll()
+                    .requestMatchers(
+                        String.format("%s/hello", apiPrefix),
+                        String.format("%s/login", apiPrefix),
+                        "/error").
+                        permitAll()
                     .anyRequest()
                     .authenticated());
 
@@ -36,6 +40,8 @@ public class WebSecurityConfig {
                 SessionCreationPolicy.STATELESS));
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter)));
 
+        http.csrf(csrf -> csrf.ignoringRequestMatchers(String.format("%s/login", apiPrefix)));
+        
         return http.build();
     }
 

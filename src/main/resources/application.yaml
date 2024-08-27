@@ -24,3 +24,17 @@ jwt:
 logging:
     level:
         org.springframework.security: DEBUG
+
+
+# Keycloak Configuration
+keycloak:
+    realm: tobioxd
+    auth-server-url: http://localhost:8080/realms/tobioxd
+    ssl-required: external
+    resource: tobioxd-rest-api
+    public-client: true
+    grant-type: password
+    client-id: tobioxd-rest-api
+    token_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/token
+    introspection_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/token/introspect
+    end_session_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/logout

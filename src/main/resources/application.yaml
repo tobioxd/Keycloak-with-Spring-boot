@@ -1,0 +1,40 @@
+server:
+    port: 8081
+
+api:
+    prefix: /api/v1
+
+# Security Configuration
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8080/realms/tobioxd
+                    jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+# JWT Configuration
+jwt:
+    auth:
+        converter:
+            resource-id: tobioxd-rest-api
+            principal-attribute: principal_username
+
+# Logging Configuration
+logging:
+    level:
+        org.springframework.security: DEBUG
+
+
+# Keycloak Configuration
+keycloak:
+    realm: tobioxd
+    auth-server-url: http://localhost:8080/realms/tobioxd
+    ssl-required: external
+    resource: tobioxd-rest-api
+    public-client: true
+    grant-type: password
+    client-id: tobioxd-rest-api
+    token_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/token
+    introspection_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/token/introspect
+    end_session_endpoint: http://localhost:8080/realms/tobioxd/protocol/openid-connect/logout

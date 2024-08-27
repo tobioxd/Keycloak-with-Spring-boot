@@ -68,11 +68,27 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseEntity<Response> logout(TokenDTO tokenDTO) {
-        return null;
+        HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("client_id", clientId);
+		map.add("refresh_token", tokenDTO.getToken());
+		
+		
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map,headers);
+		
+		ResponseEntity<Response> response = restTemplate.postForEntity(endSessionEndpoint, httpEntity, Response.class);
+		
+		Response res = new Response();
+		if(response.getStatusCode().is2xxSuccessful()) {
+			res.setMessage("Logged out successfully");
+		}
+		return new ResponseEntity<>(res,HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<IntrospectResponse> introspect(TokenDTO tokenDTO) {
+    public ResponseEntity<IntrospectResponse> introspect(String token) {
         return null;
     }
 

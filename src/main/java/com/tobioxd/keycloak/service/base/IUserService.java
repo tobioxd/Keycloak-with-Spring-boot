@@ -14,6 +14,6 @@ public interface IUserService {
 
     public ResponseEntity<Response> logout(TokenDTO tokenDTO);
 
-    public ResponseEntity<IntrospectResponse> introspect(TokenDTO tokenDTO);
+    public ResponseEntity<IntrospectResponse> introspect(String token);
 
 }

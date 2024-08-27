@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @RestController
@@ -35,8 +36,8 @@ public class UserController {
 	}
 	
 	@PostMapping("/introspect")
-	public ResponseEntity<IntrospectResponse> introspect(@RequestBody TokenDTO tokenDTO) {
-		return userServiceImpl.introspect(tokenDTO);
+	public ResponseEntity<IntrospectResponse> introspect(@RequestHeader("Authorization") String token) {
+		return userServiceImpl.introspect(token);
 	}
 
 }

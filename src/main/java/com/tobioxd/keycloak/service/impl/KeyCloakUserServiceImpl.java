@@ -1,6 +1,7 @@
 package com.tobioxd.keycloak.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,8 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -139,14 +142,21 @@ public class KeyCloakUserServiceImpl implements IKeyCloakUserService {
                 throw new UnauthorizedException("Invalid token format.");
             }
 
-            String jwtToken = token.substring(7); 
+            String jwtToken = token.substring(7);
 
             Jwt jwt = jwtDecoder.decode(jwtToken);
 
             String tokenUserId = jwtAuthConverter.getPrincipalClaimName(jwt);
 
             if (!tokenUserId.equals(userId)) {
-                throw new AuthenticationException("User not authorized to view this user details !");
+                Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext()
+                        .getAuthentication().getAuthorities();
+                boolean isAdmin = authorities.stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+                if (!isAdmin) {
+                    throw new AuthenticationException("User not authorized to view this user details !");
+                }
             }
 
             UserRepresentation userRepresentation = getUser(userId);
